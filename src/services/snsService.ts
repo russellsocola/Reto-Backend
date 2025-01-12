@@ -1,6 +1,6 @@
-import { SNS } from 'aws-sdk';
+import AWS from 'aws-sdk';
 
-const sns = new SNS();
+const sns = new AWS.SNS();
 
 export const publishMessage = async ( topicArn: string, message: string, attributes: { [key: string]: string}) =>{
 

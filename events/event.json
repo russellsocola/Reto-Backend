@@ -1,9 +1,9 @@
 {
-    "body": "",
-    "path": "/path/to/resource",
+    "body": "{\n\"insuredId\": \"00015\",\n\"scheduleId\": 100,\n\"countryISO\": \"CL\"\n}",
+    "path": "/reservation",
     "httpMethod": "POST",
     "pathParameters": {
-    "proxy": "/path/to/resource"
+    "proxy": "/reservation"
     },
     "headers": {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",

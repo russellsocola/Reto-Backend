@@ -31,9 +31,9 @@ Resources:
   SNSSubscriptionPe:
     Type: AWS::SNS::Subscription
     Properties:
-      TopicArn: !Ref SNSTopic
+      TopicArn: SNSTopic
       Protocol: sqs
-      Endpoint: !GetAtt SQSPe.Arn
+      Endpoint: SQSPe.Arn
       FilterPolicy:
         countryISO:
           - PE
@@ -52,6 +52,8 @@ Resources:
               Method: post
       Environment:
         Variables:
+          SNS_TOPIC_ARN: 
+            Ref: SNSTopic
           DbHost: ""
           BbUser: ""
           BbPassword: ""
@@ -59,3 +61,10 @@ Resources:
       DockerTag: nodejs22.x-v1
       DockerContext: ./src
       Dockerfile: Dockerfile
+
+  # AppointmentTopicSubscriptionCL:
+  #   Type: AWS::SNS::Subscription
+  #     Properties:
+  #       TopicArn: !Ref SNSTopic  # ARN del tópico SNS definido previamente
+  #       Protocol: lambda
+  #       Endpoint: !GetAtt AppointmentCL.Arn  # ARN de la Lambda appointmentCL
