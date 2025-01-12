@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1692.0",
+    "mysql2": "^3.12.0",
     "retotecnico": "file:",
     "uuid": "^11.0.5"
   }

@@ -45,11 +45,16 @@ Resources:
       Architectures:
       - x86_64
       Events:
-          HelloWorld:
+          CitaReservation:
             Type: Api
             Properties:
               Path: /reservation
               Method: post
+      Environment:
+        Variables:
+          DbHost: ""
+          BbUser: ""
+          BbPassword: ""
     Metadata:
       DockerTag: nodejs22.x-v1
       DockerContext: ./src
