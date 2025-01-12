@@ -28,15 +28,27 @@ Resources:
     Properties:
       QueueName: SQS_PE
 
+
+  SNSSubscriptionCL:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: 'arn:aws:sns:REGION:ACCOUNT_ID:TOPIC_NAME'
+      Protocol: lambda
+      Endpoint: !GetAtt AppointmentCL.Arn
+      FilterPolicy:
+        countryISO:
+          - CL
+
   SNSSubscriptionPe:
     Type: AWS::SNS::Subscription
     Properties:
-      TopicArn: SNSTopic
-      Protocol: sqs
-      Endpoint: SQSPe.Arn
+      TopicArn: 'arn:aws:sns:REGION:ACCOUNT_ID:TOPIC_NAME'
+      Protocol: lambda
+      Endpoint: !GetAtt AppointmentPe.Arn
       FilterPolicy:
         countryISO:
           - PE
+
 # API Gateway REST API
   AddCita:
     Type: AWS::Serverless::Function
@@ -62,9 +74,24 @@ Resources:
       DockerContext: ./src
       Dockerfile: Dockerfile
 
-  # AppointmentTopicSubscriptionCL:
-  #   Type: AWS::SNS::Subscription
-  #     Properties:
-  #       TopicArn: !Ref SNSTopic  # ARN del tópico SNS definido previamente
-  #       Protocol: lambda
-  #       Endpoint: !GetAtt AppointmentCL.Arn  # ARN de la Lambda appointmentCL
+  AppointmentCL:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/appointmentCL.handler
+      Runtime: nodejs22.x
+      Environment:
+        Variables:
+          DbHost: "chile-db-host"
+          DbUser: "chile-db-user"
+          DbPassword: "chile-db-password"
+
+  AppointmentPe:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/appointmentPe.handler
+      Runtime: nodejs22.x
+      Environment:
+        Variables:
+          DbHost: "peru-db-host"
+          DbUser: "peru-db-user"
+          DbPassword: "peru-db-password"

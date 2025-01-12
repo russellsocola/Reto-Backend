@@ -1,16 +1,25 @@
 import AWS from 'aws-sdk';
+import { ScheduleParameters } from '../interfaces/interface';
+
+interface MessageAttribute {
+  DataType: string;
+  StringValue: string;
+};
 
 const sns = new AWS.SNS();
 
-export const publishMessage = async ( topicArn: string, message: string, attributes: { [key: string]: string}) =>{
+//voy a recibir un mensaje y lo voy a publicar en el topic de SNS haciendo un filtro si es para PE o CL
+export const publishMessage = async (message: ScheduleParameters, topicArn: string, countryISO: string): Promise<void> => {
+  const params = {
+    Message: JSON.stringify(message),
+    TopicArn: topicArn,
+    MessageAttributes: {
+      countryISO: {
+        DataType: 'String',
+        StringValue: countryISO
+      }
+    }
+  };
 
-    await sns.publish({TargetArn: topicArn, Message: message, MessageAttributes: Object.entries(attributes).reduce(
-        (acc, [key, value]) => ({
-          ...acc,
-          [key]: { DataType: "String", StringValue: value },
-        }),
-        {}
-      ),
-    })
-    .promise()
+  await sns.publish(params).promise();
 }

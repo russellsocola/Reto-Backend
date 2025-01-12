@@ -1,6 +1,7 @@
 import mysql from 'mysql2/promise';
 import { DatabaseCredentials } from '../interfaces/interface';
 
+//las credenciales de la base de datos se obtienen desde las variables de entorno
 const dbHost = process.env.DB_HOST;
 const dbUser = process.env.DB_USER;
 const dbPassword = process.env.DB_PASSWORD;
