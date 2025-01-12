@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  RetoTecnico
+
+  SAM Template for RetoTecnico
+Globals:
+  Function:
+    Timeout: 3
+
+    Tracing: Active
+    # You can add LoggingConfig parameters such as the Logformat, Log Group, and SystemLogLevel or ApplicationLogLevel. Learn more here https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-loggingconfig.
+    LoggingConfig:
+      LogFormat: JSON
+  Api:
+    TracingEnabled: true
+  
+Resources:
+  # SNS Topic
+  SNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: AppointmentTopic
+  
+  # SQS Queue
+  SQSPe:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: SQS_PE
+
+  SNSSubscriptionPe:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref SNSTopic
+      Protocol: sqs
+      Endpoint: !GetAtt SQSPe.Arn
+      FilterPolicy:
+        countryISO:
+          - PE
+# API Gateway REST API
+  AddCita:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Architectures:
+      - x86_64
+      Events:
+          HelloWorld:
+            Type: Api
+            Properties:
+              Path: /reservation
+              Method: post
+    Metadata:
+      DockerTag: nodejs22.x-v1
+      DockerContext: ./src
+      Dockerfile: Dockerfile
