@@ -1,19 +1,27 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { v4 as uuidv4 } from "uuid";
-
+import { EventParameters} from "../interfaces/eventInterface"
+ 
 export const appointmentHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => 
     {
-        const body = JSON.parse(event.body||"{}");
+        try{
+            if(!event.body){
+                return{
+                    statusCode: 400,
+                    body: JSON.stringify({message: "Invalid request body"})
+                }
+            }
+            const eventBody: EventParameters = JSON.parse(event.body);
+
+
+        }catch(e){
+            return{
+                statusCode: 400,
+                body: JSON.stringify({message: "Invalid request body"})
+            }
+        }
         
         const appointmentId = uuidv4();
-
-        const item = {
-            id: appointmentId,
-            name: body.name,
-            status: "pending",
-            createdAt: new Date().toISOString(),
-            countryISO: body.countryISO,
-        };
 
         return {
             statusCode:200,
@@ -21,3 +29,5 @@ export const appointmentHandler = async (event: APIGatewayProxyEvent): Promise<A
                 message:"Appointment created successfully",id:appointmentId}),
         };
     };
+
+

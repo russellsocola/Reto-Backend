@@ -22,6 +22,8 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "aws-sdk": "^2.1692.0",
+    "retotecnico": "file:",
     "uuid": "^11.0.5"
   }
 }
