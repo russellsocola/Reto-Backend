@@ -1,8 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { putItem } from "../services/dynamoDBService";
-import { publishMessage } from "../services/snsService";
 import { v4 as uuidv4 } from "uuid";
-import { SNS_TOPIC_ARN } from "../utils/constants";
 
 export const appointmentHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => 
     {
@@ -17,12 +14,6 @@ export const appointmentHandler = async (event: APIGatewayProxyEvent): Promise<A
             createdAt: new Date().toISOString(),
             countryISO: body.countryISO,
         };
-
-        await putItem("AppointmentsTable",item);
-
-        await publishMessage(SNS_TOPIC_ARN,JSON.stringify(item),{
-            countryISO: body.countryISO,
-        });
 
         return {
             statusCode:200,
